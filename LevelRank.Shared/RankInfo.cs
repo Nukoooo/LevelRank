@@ -21,6 +21,6 @@ public class RankInfo
     public ulong BombPlants  { get; set; }
     public ulong BombDefuses { get; set; }
 
-    public ulong HostageRescues { get; set; }
-    public ulong HostageCarrierKills { get; set; }
+    public ulong HostageRescues        { get; set; }
+    public ulong PreventHostageRescues { get; set; }
 }
