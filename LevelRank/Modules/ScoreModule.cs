@@ -11,6 +11,8 @@ internal interface IScoreModule
 {
     bool IsRankEnabled { get; }
 
+    int DefaultScore { get; }
+
     int GetScoreForAction(ScoreAction action);
 }
 
@@ -34,6 +36,7 @@ internal class ScoreModule : IModule, IScoreModule, IClientListener, IGameListen
     private readonly IConVar _hostageRescueReward;
     private readonly IConVar _hostagePreventRescueReward;
     private readonly IConVar _minPlayers;
+    private readonly IConVar _defaultScore;
 
     private int _playerCount;
 
@@ -44,7 +47,8 @@ internal class ScoreModule : IModule, IScoreModule, IClientListener, IGameListen
         _bridge = bridge;
         _logger = logger;
 
-        _minPlayers = configManager.CreateConVar("lr_min_players", 4, "Minimum players required to enable rank");
+        _minPlayers   = configManager.CreateConVar("lr_min_players",    4,    "Minimum players required to enable rank");
+        _defaultScore = configManager.CreateConVar("lr_default_score", 1100, "Default score for new players");
 
         _killReward          = configManager.CreateConVar("lr_score_kill",           3,  "Score reward for a kill");
         _deathPenalty        = configManager.CreateConVar("lr_score_death",          -2, "Score penalty for dying");
@@ -106,6 +110,8 @@ internal class ScoreModule : IModule, IScoreModule, IClientListener, IGameListen
 
         Interlocked.Decrement(ref _playerCount);
     }
+
+    public int DefaultScore => _defaultScore.GetInt32();
 
     public bool IsRankEnabled
     {

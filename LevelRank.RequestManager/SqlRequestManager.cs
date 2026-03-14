@@ -21,14 +21,14 @@ public class SqlRequestManager : IRequestManager, IDisposable
         _logger.LogInformation("SqlRequestManager initialized, tables created if not exist");
     }
 
-    public async Task<RankInfo> GetUserRankInfo(ulong steamId)
+    public async Task<RankInfo> GetUserRankInfo(ulong steamId, ulong defaultScore = 0)
     {
         try
         {
             var entity = await _db.Queryable<PlayerRankEntity>()
                                   .FirstAsync(x => x.SteamId == steamId);
 
-            return entity?.ToRankInfo() ?? new RankInfo();
+            return entity?.ToRankInfo() ?? new RankInfo { Score = defaultScore };
         }
         catch (Exception ex)
         {

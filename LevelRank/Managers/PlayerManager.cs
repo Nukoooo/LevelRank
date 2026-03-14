@@ -1,3 +1,4 @@
+using LevelRank.Modules;
 using LevelRank.Shared;
 using Microsoft.Extensions.Logging;
 using Sharp.Extensions.GameEventManager;
@@ -25,15 +26,18 @@ internal class PlayerManager : IManager, IClientListener, IPlayerManager, IGameL
 
     private readonly InterfaceBridge   _bridge;
     private readonly IGameEventManager _gameEventManager;
+    private readonly IScoreModule      _scoreModule;
 
     private readonly ILogger<PlayerManager> _logger;
 
     public PlayerManager(InterfaceBridge        bridge,
                          IGameEventManager      gameEventManager,
+                         IScoreModule           scoreModule,
                          ILogger<PlayerManager> logger)
     {
         _bridge           = bridge;
         _gameEventManager = gameEventManager;
+        _scoreModule      = scoreModule;
         _logger           = logger;
     }
 
@@ -91,7 +95,7 @@ internal class PlayerManager : IManager, IClientListener, IPlayerManager, IGameL
         {
             try
             {
-                var rankInfo = await requestManager.GetUserRankInfo(steamId).ConfigureAwait(false);
+                var rankInfo = await requestManager.GetUserRankInfo(steamId, (ulong)_scoreModule.DefaultScore).ConfigureAwait(false);
 
                 var playerData = new PlayerData
                 {
